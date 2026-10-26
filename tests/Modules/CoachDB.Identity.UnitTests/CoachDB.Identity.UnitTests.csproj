@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <IsTestProject>true</IsTestProject>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\src\Modules\Identity\CoachDB.Identity.Domain\CoachDB.Identity.Domain.csproj" />
+    <ProjectReference Include="..\..\..\src\Modules\Identity\CoachDB.Identity.Application\CoachDB.Identity.Application.csproj" />
+    <ProjectReference Include="..\..\..\src\Modules\Identity\CoachDB.Identity.Infrastructure\CoachDB.Identity.Infrastructure.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" />
+    <PackageReference Include="xunit.v3" />
+    <PackageReference Include="xunit.runner.visualstudio" />
+    <PackageReference Include="Shouldly" />
+  </ItemGroup>
+  <ItemGroup>
+    <Using Include="Xunit" />
+    <Using Include="Shouldly" />
+  </ItemGroup>
+</Project>

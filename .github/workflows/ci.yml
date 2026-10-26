@@ -1,0 +1,60 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+env:
+  DOTNET_NOLOGO: true
+  DOTNET_CLI_TELEMETRY_OPTOUT: true
+
+jobs:
+  build-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          global-json-file: global.json
+
+      - name: Restore
+        run: dotnet restore CoachDB.slnx
+
+      - name: Format check
+        run: dotnet format CoachDB.slnx --verify-no-changes --no-restore
+
+      - name: Build (warnings as errors)
+        run: dotnet build CoachDB.slnx -c Release --no-restore -warnaserror
+
+      - name: Migrations match the model
+        # Fails when an entity/configuration changed without `dotnet ef migrations add`. One line per module.
+        run: |
+          dotnet tool restore
+          dotnet ef migrations has-pending-model-changes -p src/Modules/Identity/CoachDB.Identity.Infrastructure --no-build -c Release
+          dotnet ef migrations has-pending-model-changes -p src/Modules/Tenants/CoachDB.Tenants.Infrastructure --no-build -c Release
+
+      - name: Test
+        # Unit, architecture and API tests, plus integration tests on Testcontainers (Docker is available on ubuntu runners).
+        run: dotnet test --solution CoachDB.slnx -c Release --no-build
+
+      - name: Vulnerable packages
+        shell: bash
+        run: |
+          dotnet list CoachDB.slnx package --vulnerable --include-transitive | tee vulnerable.txt
+          if grep -q -i "has the following vulnerable packages" vulnerable.txt; then
+            echo "::error::Vulnerable packages found"
+            exit 1
+          fi
+
+  docker:
+    runs-on: ubuntu-latest
+    needs: build-test
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build image
+        run: docker build -f deploy/Dockerfile -t coachdb-api:${{ github.sha }} .

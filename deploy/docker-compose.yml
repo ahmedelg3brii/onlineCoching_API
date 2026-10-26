@@ -1,0 +1,92 @@
+﻿# Local development infrastructure for CoachDB.
+# ⚠ DEV-ONLY credentials. Never reuse these passwords outside your machine;
+#   staging/production secrets come from the vault.
+#
+#   docker compose -f deploy/docker-compose.yml up -d
+
+name: coachdb
+
+# ---- Shared fragments --------------------------------------------------------
+x-healthcheck: &healthcheck
+  interval: 5s
+  timeout: 3s
+  retries: 10
+
+x-minio-credentials: &minio-credentials
+  MINIO_ROOT_USER: minioadmin          # dev-only
+  MINIO_ROOT_PASSWORD: minioadmin      # dev-only
+
+services:
+  postgres:
+    image: postgres:16
+    environment:
+      POSTGRES_DB: coachdb
+      POSTGRES_USER: postgres          # dev-only
+      POSTGRES_PASSWORD: postgres      # dev-only
+    ports:
+      - "5433:5432"   # 5433 on the host: a local PostgreSQL service may already use 5432
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+      - ./postgres/init:/docker-entrypoint-initdb.d:ro   # creates app_* roles on first start
+    healthcheck:
+      <<: *healthcheck
+      test: ["CMD-SHELL", "pg_isready -U postgres -d coachdb"]
+
+  redis:
+    image: redis:7
+    ports:
+      - "6379:6379"
+    healthcheck:
+      <<: *healthcheck
+      test: ["CMD", "redis-cli", "ping"]
+
+  seq:
+    image: datalust/seq
+    environment:
+      ACCEPT_EULA: "Y"
+    ports:
+      - "5341:80"        # UI + ingestion at http://localhost:5341
+    volumes:
+      - seq-data:/data
+
+  minio:
+    # minio/minio was removed from Docker Hub (Sep 2026) and quay.io now needs auth.
+    # Silo is a drop-in MinIO fork: same args, env vars, ports and data layout.
+    # TODO: pin a specific tag instead of :latest.
+    image: pgsty/silo:latest
+    command: server /data --console-address ":9001"
+    environment: *minio-credentials
+    ports:
+      - "9000:9000"      # S3 API
+      - "9001:9001"      # console
+    volumes:
+      - minio-data:/data
+
+  # One-shot: creates the private media bucket, then exits.
+  # minio/mc was removed from Docker Hub too, so this uses the AWS CLI against
+  # the S3 API. It waits for MinIO itself, so MinIO needs no healthcheck.
+  minio-init:
+    image: amazon/aws-cli
+    depends_on:
+      - minio
+    environment:
+      AWS_ACCESS_KEY_ID: minioadmin        # dev-only, matches MINIO_ROOT_USER
+      AWS_SECRET_ACCESS_KEY: minioadmin    # dev-only, matches MINIO_ROOT_PASSWORD
+      AWS_DEFAULT_REGION: us-east-1
+      AWS_ENDPOINT_URL: http://minio:9000
+    entrypoint: ["/bin/sh", "-c"]
+    command:
+      - |
+        for i in $$(seq 1 30); do
+          aws s3api list-buckets > /dev/null 2>&1 && break
+          echo "waiting for minio ($$i/30)..."; sleep 2
+        done
+        # New buckets are private by default, so no policy step is needed.
+        aws s3api head-bucket --bucket coachdb-media 2>/dev/null \
+          || aws s3api create-bucket --bucket coachdb-media
+    restart: "no"
+
+volumes:
+  postgres-data:
+  seq-data:
+  minio-data:

@@ -1,0 +1,3 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!-- No package references: Domain projects depend only on this. -->
+</Project>

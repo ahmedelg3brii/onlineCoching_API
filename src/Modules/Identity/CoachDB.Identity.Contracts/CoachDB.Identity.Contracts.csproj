@@ -1,0 +1,6 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!-- Public surface of the Identity module: what other modules may use. Primitives + SharedKernel only. -->
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\BuildingBlocks\CoachDB.SharedKernel\CoachDB.SharedKernel.csproj" />
+  </ItemGroup>
+</Project>

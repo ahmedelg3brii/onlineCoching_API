@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\BuildingBlocks\CoachDB.Application.Abstractions\CoachDB.Application.Abstractions.csproj" />
+    <ProjectReference Include="..\CoachDB.Identity.Domain\CoachDB.Identity.Domain.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <!-- Handlers are internal; the Mediator source generator in the host and the module's own projects need access. -->
+    <InternalsVisibleTo Include="CoachDB.Api" />
+    <InternalsVisibleTo Include="CoachDB.Identity.Infrastructure" />
+    <InternalsVisibleTo Include="CoachDB.Identity.Api" />
+    <InternalsVisibleTo Include="CoachDB.Identity.UnitTests" />
+  </ItemGroup>
+</Project>

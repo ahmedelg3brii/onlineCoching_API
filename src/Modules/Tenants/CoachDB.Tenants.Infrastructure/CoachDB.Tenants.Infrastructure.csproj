@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\BuildingBlocks\CoachDB.Infrastructure.Common\CoachDB.Infrastructure.Common.csproj" />
+    <ProjectReference Include="..\CoachDB.Tenants.Application\CoachDB.Tenants.Application.csproj" />
+    <ProjectReference Include="..\CoachDB.Tenants.Contracts\CoachDB.Tenants.Contracts.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="FluentValidation.DependencyInjectionExtensions" />
+    <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" />
+  </ItemGroup>
+  <ItemGroup>
+    <InternalsVisibleTo Include="CoachDB.Tenants.UnitTests" />
+    <InternalsVisibleTo Include="CoachDB.IntegrationTests" />
+  </ItemGroup>
+</Project>

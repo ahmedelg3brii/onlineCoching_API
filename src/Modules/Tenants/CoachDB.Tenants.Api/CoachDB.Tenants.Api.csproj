@@ -1,0 +1,10 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <ItemGroup>
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\BuildingBlocks\CoachDB.Api.Common\CoachDB.Api.Common.csproj" />
+    <ProjectReference Include="..\CoachDB.Tenants.Application\CoachDB.Tenants.Application.csproj" />
+    <ProjectReference Include="..\CoachDB.Tenants.Contracts\CoachDB.Tenants.Contracts.csproj" />
+  </ItemGroup>
+</Project>

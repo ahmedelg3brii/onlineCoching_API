@@ -1,0 +1,27 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+  <PropertyGroup>
+    <UserSecretsId>3a59369a-5615-47b4-874f-d270cb113cf1</UserSecretsId>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\BuildingBlocks\CoachDB.Api.Common\CoachDB.Api.Common.csproj" />
+    <ProjectReference Include="..\..\BuildingBlocks\CoachDB.Infrastructure.Common\CoachDB.Infrastructure.Common.csproj" />
+    <ProjectReference Include="..\..\Modules\Identity\CoachDB.Identity.Api\CoachDB.Identity.Api.csproj" />
+    <ProjectReference Include="..\..\Modules\Identity\CoachDB.Identity.Infrastructure\CoachDB.Identity.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\Modules\Tenants\CoachDB.Tenants.Api\CoachDB.Tenants.Api.csproj" />
+    <ProjectReference Include="..\..\Modules\Tenants\CoachDB.Tenants.Infrastructure\CoachDB.Tenants.Infrastructure.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Mediator.SourceGenerator">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="FluentValidation.DependencyInjectionExtensions" />
+    <PackageReference Include="Microsoft.AspNetCore.OpenApi" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" />
+    <PackageReference Include="Scalar.AspNetCore" />
+    <PackageReference Include="Serilog.AspNetCore" />
+  </ItemGroup>
+  <ItemGroup>
+    <InternalsVisibleTo Include="CoachDB.Api.Tests" />
+  </ItemGroup>
+</Project>

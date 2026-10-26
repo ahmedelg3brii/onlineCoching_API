@@ -1,0 +1,7 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!-- Entities and rules only. No EF Core, no ASP.NET Core. -->
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\BuildingBlocks\CoachDB.SharedKernel\CoachDB.SharedKernel.csproj" />
+    <ProjectReference Include="..\CoachDB.Tenants.Contracts\CoachDB.Tenants.Contracts.csproj" />
+  </ItemGroup>
+</Project>

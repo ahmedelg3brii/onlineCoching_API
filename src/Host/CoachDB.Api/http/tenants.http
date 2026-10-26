@@ -1,0 +1,103 @@
+# Tenants module: sample requests (VS Code REST Client / Visual Studio / Rider).
+# 1) Run "Register" or "Login", copy accessToken into @token. 2) "Create business", copy its slug into @tenant.
+# Admin requests need a platform admin token:
+#   UPDATE identity.users SET is_platform_admin = true WHERE email = '...';  then log in again.
+
+@api = http://localhost:5240/api/v1
+@token = paste-access-token
+@tenant = fit-with-ahmed
+
+### Register
+POST {{api}}/auth/register
+Content-Type: application/json
+
+{ "email": "owner@example.com", "password": "Secret123!", "fullName": "Ahmed Coach", "locale": "ar" }
+
+### Login
+POST {{api}}/auth/login
+Content-Type: application/json
+
+{ "email": "owner@example.com", "password": "Secret123!" }
+
+### Is the slug free? (anonymous) → { slug, available, reason }
+GET {{api}}/tenants/slug-availability?slug={{tenant}}
+
+### Create business → 201, trial starts, you are the owner
+POST {{api}}/tenants
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{ "name": "Fit With Ahmed", "slug": "{{tenant}}", "defaultCurrency": "EGP", "timezone": "Africa/Cairo", "defaultLocale": "ar" }
+
+### My businesses (role + permissions per business)
+GET {{api}}/me/tenants
+Authorization: Bearer {{token}}
+
+### Current business (X-Tenant chooses it)
+GET {{api}}/tenant
+Authorization: Bearer {{token}}
+X-Tenant: {{tenant}}
+
+### Update business (owner): fields left out are unchanged
+PATCH {{api}}/tenant
+Authorization: Bearer {{token}}
+X-Tenant: {{tenant}}
+Content-Type: application/json
+
+{
+  "name": "Ahmed Coaching",
+  "branding": { "logoUrl": "https://cdn.example.com/logo.png", "primaryColor": "#0f766e", "tagline": "Get strong" },
+  "settings": { "contactEmail": "hello@example.com", "whatsApp": "+201000000000" }
+}
+
+### Plan, subscription and usage
+GET {{api}}/tenant/plan
+Authorization: Bearer {{token}}
+X-Tenant: {{tenant}}
+
+### Public profile (anonymous)
+GET {{api}}/public/{{tenant}}
+
+### SaaS price list (anonymous)
+GET {{api}}/plans
+
+### Payout accounts (owner)
+GET {{api}}/tenant/payment-accounts
+Authorization: Bearer {{token}}
+X-Tenant: {{tenant}}
+
+### Connect a payout account → 201 (first one becomes the default)
+POST {{api}}/tenant/payment-accounts
+Authorization: Bearer {{token}}
+X-Tenant: {{tenant}}
+Content-Type: application/json
+
+{ "provider": "paymob", "providerAccountId": "merchant-123" }
+
+### Errors to try: no X-Tenant → 400 tenant_required; unknown slug → 404 tenant_not_found
+GET {{api}}/tenant
+Authorization: Bearer {{token}}
+
+### ---- Platform admin ----
+
+### All plans (including inactive)
+GET {{api}}/admin/plans
+Authorization: Bearer {{token}}
+
+### Create a plan
+POST {{api}}/admin/plans
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "code": "gym",
+  "name": "Gym",
+  "monthlyPrice": { "amount": 249.00, "currency": "USD" },
+  "maxClients": null,
+  "maxCoaches": 25,
+  "features": { "nutrition": true, "training": true, "chat": true, "custom_branding": true, "custom_domain": true }
+}
+
+### Businesses, newest first (status: trial | active | past_due | suspended | cancelled)
+GET {{api}}/admin/tenants?status=trial&limit=20
+Authorization: Bearer {{token}}

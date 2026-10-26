@@ -1,0 +1,38 @@
+<Solution>
+  <Folder Name="/src/" />
+  <Folder Name="/src/BuildingBlocks/">
+    <Project Path="src/BuildingBlocks/CoachDB.Api.Common/CoachDB.Api.Common.csproj" />
+    <Project Path="src/BuildingBlocks/CoachDB.Application.Abstractions/CoachDB.Application.Abstractions.csproj" />
+    <Project Path="src/BuildingBlocks/CoachDB.Infrastructure.Common/CoachDB.Infrastructure.Common.csproj" />
+    <Project Path="src/BuildingBlocks/CoachDB.SharedKernel/CoachDB.SharedKernel.csproj" />
+  </Folder>
+  <Folder Name="/src/Host/">
+    <Project Path="src/Host/CoachDB.Api/CoachDB.Api.csproj" />
+    <Project Path="src/Host/CoachDB.Migrator/CoachDB.Migrator.csproj" />
+  </Folder>
+  <Folder Name="/src/Modules/" />
+  <Folder Name="/src/Modules/Identity/">
+    <Project Path="src/Modules/Identity/CoachDB.Identity.Api/CoachDB.Identity.Api.csproj" />
+    <Project Path="src/Modules/Identity/CoachDB.Identity.Application/CoachDB.Identity.Application.csproj" />
+    <Project Path="src/Modules/Identity/CoachDB.Identity.Contracts/CoachDB.Identity.Contracts.csproj" />
+    <Project Path="src/Modules/Identity/CoachDB.Identity.Domain/CoachDB.Identity.Domain.csproj" />
+    <Project Path="src/Modules/Identity/CoachDB.Identity.Infrastructure/CoachDB.Identity.Infrastructure.csproj" />
+  </Folder>
+  <Folder Name="/src/Modules/Tenants/">
+    <Project Path="src/Modules/Tenants/CoachDB.Tenants.Api/CoachDB.Tenants.Api.csproj" />
+    <Project Path="src/Modules/Tenants/CoachDB.Tenants.Application/CoachDB.Tenants.Application.csproj" />
+    <Project Path="src/Modules/Tenants/CoachDB.Tenants.Contracts/CoachDB.Tenants.Contracts.csproj" />
+    <Project Path="src/Modules/Tenants/CoachDB.Tenants.Domain/CoachDB.Tenants.Domain.csproj" />
+    <Project Path="src/Modules/Tenants/CoachDB.Tenants.Infrastructure/CoachDB.Tenants.Infrastructure.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/CoachDB.Api.Tests/CoachDB.Api.Tests.csproj" />
+    <Project Path="tests/CoachDB.ArchitectureTests/CoachDB.ArchitectureTests.csproj" />
+    <Project Path="tests/CoachDB.BuildingBlocks.UnitTests/CoachDB.BuildingBlocks.UnitTests.csproj" />
+    <Project Path="tests/CoachDB.IntegrationTests/CoachDB.IntegrationTests.csproj" />
+  </Folder>
+  <Folder Name="/tests/Modules/">
+    <Project Path="tests/Modules/CoachDB.Identity.UnitTests/CoachDB.Identity.UnitTests.csproj" />
+    <Project Path="tests/Modules/CoachDB.Tenants.UnitTests/CoachDB.Tenants.UnitTests.csproj" />
+  </Folder>
+</Solution>
